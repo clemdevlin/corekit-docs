@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>@cl3m/corekit — docs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,400&family=Instrument+Serif:ital@0;1&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #0d0f12;
+    --bg2: #13161b;
+    --bg3: #1a1e26;
+    --border: #23272f;
+    --border2: #2e3440;
+    --text: #cdd6f4;
+    --muted: #6b7280;
+    --muted2: #4b5563;
+    --accent: #89b4fa;
+    --accent2: #74c7ec;
+    --green: #a6e3a1;
+    --yellow: #f9e2af;
+    --red: #f38ba8;
+    --purple: #cba6f7;
+    --orange: #fab387;
+    --teal: #94e2d5;
+    --fn: #89dceb;
+    --string: #a6e3a1;
+    --num: #fab387;
+    --kw: #cba6f7;
+    --type: #f9e2af;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Geist', sans-serif;
+    font-size: 15px;
+    line-height: 1.6;
+    min-height: 100vh;
+  }
+
+  /* ── Layout ── */
+  .layout {
+    display: grid;
+    /* grid-template-columns: 240px 1fr; */
+    min-height: 100vh;
+    max-width: 100vw;
+  }
+
+  /* ── Sidebar ── */
+  .sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    width: 240px;
+    height: 100vh;
+    background: var(--bg2);
+    border-right: 1px solid var(--border);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+  }
+
+  .sidebar::-webkit-scrollbar { width: 4px; }
+  .sidebar::-webkit-scrollbar-track { background: transparent; }
+  .sidebar::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+  .sidebar-logo {
+    padding: 24px 20px 20px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .logo-pkg {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 0.05em;
+    margin-bottom: 4px;
+  }
+
+  .logo-name {
+    font-family: 'DM Mono', monospace;
+    font-size: 18px;
+    font-weight: 500;
+    color: var(--accent);
+    letter-spacing: -0.02em;
+  }
+
+  .logo-version {
+    display: inline-block;
+    margin-top: 6px;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 4px;
+    padding: 2px 7px;
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    color: var(--muted);
+  }
+
+  .sidebar-nav { padding: 16px 0; flex: 1; }
+
+  .nav-section {
+    padding: 0 12px;
+    margin-bottom: 4px;
+  }
+
+  .nav-section-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted2);
+    padding: 8px 8px 4px;
+  }
+
+  .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    border-radius: 5px;
+    color: var(--muted);
+    text-decoration: none;
+    font-size: 13px;
+    transition: all 0.15s;
+    cursor: pointer;
+  }
+
+  .nav-link:hover { background: var(--bg3); color: var(--text); }
+  .nav-link.active { background: var(--bg3); color: var(--accent); }
+
+  .nav-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  .nav-fn {
+    display: flex;
+    align-items: center;
+    padding: 4px 8px 4px 22px;
+    border-radius: 4px;
+    color: var(--muted2);
+    text-decoration: none;
+    font-family: 'DM Mono', monospace;
+    font-size: 11.5px;
+    transition: all 0.15s;
+  }
+  .nav-fn:hover { color: var(--text); background: var(--bg3); }
+
+  /* ── Main ── */
+  .main {
+    margin-left: 240px;
+    min-height: 100vh;
+    max-width: calc(100vw - 240px);
+  }
+
+  /* ── Hero ── */
+  .hero {
+    padding: 80px 64px 64px;
+    border-bottom: 1px solid var(--border);
+    background: 
+      radial-gradient(ellipse 60% 40% at 70% 50%, rgba(137,180,250,0.06) 0%, transparent 70%),
+      radial-gradient(ellipse 40% 60% at 20% 80%, rgba(166,227,161,0.04) 0%, transparent 70%);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-image: 
+      linear-gradient(var(--border) 1px, transparent 1px),
+      linear-gradient(90deg, var(--border) 1px, transparent 1px);
+    background-size: 40px 40px;
+    opacity: 0.3;
+    mask-image: radial-gradient(ellipse 80% 80% at 50% 50%, black 0%, transparent 100%);
+  }
+
+  .hero-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    position: relative;
+  }
+
+  .hero h1 {
+    font-family: 'Instrument Serif', serif;
+    font-size: 52px;
+    line-height: 1.1;
+    color: #fff;
+    margin-bottom: 16px;
+    position: relative;
+  }
+
+  .hero h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+
+  .hero-sub {
+    font-size: 17px;
+    color: var(--muted);
+    max-width: 520px;
+    line-height: 1.65;
+    margin-bottom: 36px;
+    position: relative;
+  }
+
+  .hero-badges {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 36px;
+    position: relative;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 4px 10px;
+    border-radius: 100px;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    border: 1px solid;
+  }
+
+  .badge-blue { color: var(--accent); border-color: rgba(137,180,250,0.3); background: rgba(137,180,250,0.07); }
+  .badge-green { color: var(--green); border-color: rgba(166,227,161,0.3); background: rgba(166,227,161,0.07); }
+  .badge-purple { color: var(--purple); border-color: rgba(203,166,247,0.3); background: rgba(203,166,247,0.07); }
+  .badge-yellow { color: var(--yellow); border-color: rgba(249,226,175,0.3); background: rgba(249,226,175,0.07); }
+
+  .hero-install {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    padding: 12px 18px;
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    color: var(--text);
+    position: relative;
+  }
+
+  .hero-install .prompt { color: var(--muted2); }
+  .hero-install .cmd { color: var(--green); }
+
+  .copy-btn {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    color: var(--muted);
+    padding: 4px 8px;
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .copy-btn:hover { color: var(--text); border-color: var(--border2); }
+  .copy-btn.copied { color: var(--green); border-color: rgba(166,227,161,0.4); }
+
+  /* ── Content ── */
+  .content {
+    padding: 0 64px 80px;
+    max-width: 900px;
+  }
+
+  /* ── Section ── */
+  .section {
+    padding: 64px 0 0;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 8px;
+  }
+
+  .section-icon {
+    width: 32px; height: 32px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+
+  .section-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 28px;
+    color: #fff;
+    letter-spacing: -0.01em;
+  }
+
+  .section-desc {
+    color: var(--muted);
+    font-size: 14px;
+    margin-bottom: 32px;
+    margin-left: 46px;
+  }
+
+  /* ── Function card ── */
+  .fn-card {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--bg2);
+    margin-bottom: 12px;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+
+  .fn-card:hover { border-color: var(--border2); }
+
+  .fn-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 16px 20px;
+    gap: 12px;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .fn-header:hover .fn-name { color: #fff; }
+
+  .fn-sig {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .fn-name {
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--fn);
+    transition: color 0.15s;
+  }
+
+  .fn-params {
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    color: var(--text);
+  }
+
+  .fn-return {
+    font-family: 'DM Mono', monospace;
+    font-size: 14px;
+    color: var(--type);
+  }
+
+  .fn-desc {
+    font-size: 13px;
+    color: var(--muted);
+    margin-top: 5px;
+  }
+
+  .fn-chevron {
+    color: var(--muted2);
+    font-size: 11px;
+    margin-top: 3px;
+    transition: transform 0.2s;
+    flex-shrink: 0;
+  }
+
+  .fn-card.open .fn-chevron { transform: rotate(90deg); }
+
+  .fn-body {
+    display: none;
+    border-top: 1px solid var(--border);
+    padding: 16px 20px;
+    background: var(--bg);
+  }
+
+  .fn-card.open .fn-body { display: block; }
+
+  .fn-example-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--muted2);
+    margin-bottom: 8px;
+  }
+
+  /* ── Code block ── */
+  pre {
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 14px 16px;
+    overflow-x: auto;
+    font-family: 'DM Mono', monospace;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+
+  pre::-webkit-scrollbar { height: 4px; }
+  pre::-webkit-scrollbar-track { background: transparent; }
+  pre::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 2px; }
+
+  .kw { color: var(--kw); }
+  .fn { color: var(--fn); }
+  .str { color: var(--string); }
+  .num { color: var(--num); }
+  .cmt { color: var(--muted2); font-style: italic; }
+  .type { color: var(--type); }
+  .op { color: var(--muted); }
+  .result { color: var(--teal); }
+
+  /* ── Quickstart ── */
+  .quickstart {
+    padding: 48px 0 0;
+  }
+
+  .qs-title {
+    font-family: 'Instrument Serif', serif;
+    font-size: 28px;
+    color: #fff;
+    margin-bottom: 24px;
+  }
+
+  .tab-bar {
+    display: flex;
+    gap: 2px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+    border-radius: 8px 8px 0 0;
+    border-bottom: none;
+    padding: 6px 6px 0;
+  }
+
+  .tab {
+    padding: 6px 14px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    color: var(--muted);
+    border-radius: 5px 5px 0 0;
+    cursor: pointer;
+    transition: all 0.15s;
+    border-bottom: 2px solid transparent;
+  }
+
+  .tab:hover { color: var(--text); }
+  .tab.active { color: var(--accent); border-bottom-color: var(--accent); background: var(--bg2); }
+
+  .tab-content { display: none; }
+  .tab-content.active { display: block; }
+
+  .tab-content pre {
+    border-radius: 0 0 7px 7px;
+    border-top-color: transparent;
+  }
+
+  /* ── Browser section ── */
+  .usage-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 16px;
+  }
+
+  .usage-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+  }
+
+  .usage-card-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 10px;
+    display: flex; align-items: center; gap: 6px;
+  }
+
+  .usage-card pre {
+    border: none;
+    background: var(--bg3);
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+
+  /* ── Stats bar ── */
+  .stats-bar {
+    display: flex;
+    gap: 0;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 40px;
+  }
+
+  .stat {
+    flex: 1;
+    padding: 20px 24px;
+    border-right: 1px solid var(--border);
+  }
+  .stat:last-child { border-right: none; }
+
+  .stat-val {
+    font-family: 'Instrument Serif', serif;
+    font-size: 28px;
+    color: #fff;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .stat-label {
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  /* ── CLI section ── */
+  .cli-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+
+  .cli-cmd {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 7px;
+    padding: 12px 14px;
+    font-family: 'DM Mono', monospace;
+    font-size: 12.5px;
+    line-height: 1.6;
+  }
+
+  .cli-cmd .prompt { color: var(--muted2); }
+  .cli-cmd .cmd-name { color: var(--accent); }
+  .cli-cmd .cmd-sub { color: var(--fn); }
+  .cli-cmd .cmd-arg { color: var(--string); }
+  .cli-cmd .cmd-out { color: var(--teal); display: block; margin-top: 2px; padding-left: 2px; }
+
+  /* ── Footer ── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 32px 64px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--muted2);
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+  }
+
+  footer a { color: var(--muted); text-decoration: none; }
+  footer a:hover { color: var(--text); }
+
+  /* ── Divider ── */
+  .divider {
+    height: 1px;
+    background: var(--border);
+    margin: 48px 0 0;
+  }
+
+  /* ── Scrollbar ── */
+  body::-webkit-scrollbar { width: 6px; }
+  body::-webkit-scrollbar-track { background: var(--bg); }
+  body::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 3px; }
+
+  /* ── Animations ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .hero > * { animation: fadeUp 0.5s ease both; }
+  .hero-eyebrow { animation-delay: 0.05s; }
+  .hero h1 { animation-delay: 0.1s; }
+  .hero-sub { animation-delay: 0.15s; }
+  .hero-badges { animation-delay: 0.2s; }
+  .hero-install { animation-delay: 0.25s; }
+
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    .sidebar { display: none; }
+    .main { margin-left: 0; }
+    .hero, .content { padding-left: 24px; padding-right: 24px; }
+    .usage-grid, .cli-grid { grid-template-columns: 1fr; }
+    .stats-bar { flex-wrap: wrap; }
+    footer { flex-direction: column; gap: 8px; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- ── Sidebar ── -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="logo-pkg">npm package</div>
+      <div class="logo-name">@cl3m/corekit</div>
+      <span class="logo-version">v0.1.0</span>
+    </div>
+    <nav class="sidebar-nav">
+      <div class="nav-section">
+        <div class="nav-section-label">Overview</div>
+        <a class="nav-link active" href="#home">
+          <span class="nav-dot" style="background:#89b4fa"></span> Introduction
+        </a>
+        <a class="nav-link" href="#quickstart">
+          <span class="nav-dot" style="background:#a6e3a1"></span> Quickstart
+        </a>
+        <a class="nav-link" href="#browser">
+          <span class="nav-dot" style="background:#cba6f7"></span> Browser Support
+        </a>
+        <a class="nav-link" href="#cli">
+          <span class="nav-dot" style="background:#f9e2af"></span> CLI
+        </a>
+      </div>
+      <div class="nav-section">
+        <div class="nav-section-label">API Reference</div>
+        <a class="nav-link" href="#strings">
+          <span class="nav-dot" style="background:#a6e3a1"></span> strings
+        </a>
+        <a class="nav-fn" href="#fn-capitalize">capitalize</a>
+        <a class="nav-fn" href="#fn-toCamelCase">toCamelCase</a>
+        <a class="nav-fn" href="#fn-toKebabCase">toKebabCase</a>
+        <a class="nav-fn" href="#fn-toSnakeCase">toSnakeCase</a>
+        <a class="nav-fn" href="#fn-truncate">truncate</a>
+        <a class="nav-fn" href="#fn-slugify">slugify</a>
+        <a class="nav-fn" href="#fn-countOccurrences">countOccurrences</a>
+        <a class="nav-fn" href="#fn-isEmail">isEmail</a>
+        <a class="nav-fn" href="#fn-reverseString">reverseString</a>
+      </div>
+      <div class="nav-section">
+        <a class="nav-link" href="#arrays">
+          <span class="nav-dot" style="background:#89b4fa"></span> arrays
+        </a>
+        <a class="nav-fn" href="#fn-unique">unique</a>
+        <a class="nav-fn" href="#fn-chunk">chunk</a>
+        <a class="nav-fn" href="#fn-flatten">flatten</a>
+        <a class="nav-fn" href="#fn-intersection">intersection</a>
+        <a class="nav-fn" href="#fn-difference">difference</a>
+        <a class="nav-fn" href="#fn-groupBy">groupBy</a>
+        <a class="nav-fn" href="#fn-shuffle">shuffle</a>
+        <a class="nav-fn" href="#fn-sum">sum</a>
+        <a class="nav-fn" href="#fn-minMax">minMax</a>
+        <a class="nav-fn" href="#fn-range">range</a>
+      </div>
+      <div class="nav-section">
+        <a class="nav-link" href="#objects">
+          <span class="nav-dot" style="background:#cba6f7"></span> objects
+        </a>
+        <a class="nav-fn" href="#fn-deepClone">deepClone</a>
+        <a class="nav-fn" href="#fn-deepMerge">deepMerge</a>
+        <a class="nav-fn" href="#fn-pick">pick</a>
+        <a class="nav-fn" href="#fn-omit">omit</a>
+        <a class="nav-fn" href="#fn-flattenObject">flattenObject</a>
+        <a class="nav-fn" href="#fn-invertObject">invertObject</a>
+        <a class="nav-fn" href="#fn-getByPath">getByPath</a>
+        <a class="nav-fn" href="#fn-isEmpty">isEmpty</a>
+      </div>
+      <div class="nav-section">
+        <a class="nav-link" href="#dates">
+          <span class="nav-dot" style="background:#f9e2af"></span> dates
+        </a>
+        <a class="nav-fn" href="#fn-formatDate">formatDate</a>
+        <a class="nav-fn" href="#fn-addToDate">addToDate</a>
+        <a class="nav-fn" href="#fn-diffDates">diffDates</a>
+        <a class="nav-fn" href="#fn-timeAgo">timeAgo</a>
+        <a class="nav-fn" href="#fn-isBetween">isBetween</a>
+        <a class="nav-fn" href="#fn-isSameDay">isSameDay</a>
+        <a class="nav-fn" href="#fn-startOf">startOf</a>
+        <a class="nav-fn" href="#fn-isValidDate">isValidDate</a>
+      </div>
+    </nav>
+  </aside>
+
+  <!-- ── Main ── -->
+  <main class="main">
+
+    <!-- Hero -->
+    <section class="hero" id="home">
+      <div class="hero-eyebrow">@cl3m/corekit</div>
+      <h1>Utilities for<br><em>every project</em></h1>
+      <p class="hero-sub">A TypeScript-first general-purpose utility library covering strings, arrays, objects, and dates. Zero dependencies. Works everywhere.</p>
+      <div class="hero-badges">
+        <span class="badge badge-blue">TypeScript-first</span>
+        <span class="badge badge-green">Zero dependencies</span>
+        <span class="badge badge-purple">ESM + CJS</span>
+        <span class="badge badge-yellow">Browser + Node</span>
+      </div>
+      <div class="hero-install">
+        <span class="prompt">$</span>
+        <span class="cmd" id="install-cmd">npm install @cl3m/corekit</span>
+        <button class="copy-btn" onclick="copyInstall(this)">copy</button>
+      </div>
+    </section>
+
+    <div class="content">
+
+      <!-- Stats -->
+      <div class="section">
+        <div class="stats-bar">
+          <div class="stat">
+            <div class="stat-val">39</div>
+            <div class="stat-label">utility functions</div>
+          </div>
+          <div class="stat">
+            <div class="stat-val">4</div>
+            <div class="stat-label">core modules</div>
+          </div>
+          <div class="stat">
+            <div class="stat-val">0</div>
+            <div class="stat-label">dependencies</div>
+          </div>
+          <div class="stat">
+            <div class="stat-val">10</div>
+            <div class="stat-label">CLI commands</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quickstart -->
+      <div class="quickstart" id="quickstart">
+        <div class="qs-title">Quickstart</div>
+        <div class="tab-bar">
+          <div class="tab active" onclick="switchTab(this,'esm')">ESM</div>
+          <div class="tab" onclick="switchTab(this,'cjs')">CJS</div>
+          <div class="tab" onclick="switchTab(this,'subpath')">Subpath imports</div>
+        </div>
+        <div id="tab-esm" class="tab-content active">
+<pre><span class="kw">import</span> { <span class="fn">strings</span>, <span class="fn">arrays</span>, <span class="fn">objects</span>, <span class="fn">dates</span> } <span class="kw">from</span> <span class="str">'@cl3m/corekit'</span>;
+
+strings.<span class="fn">slugify</span>(<span class="str">'Hello World!'</span>);          <span class="cmt">// "hello-world"</span>
+strings.<span class="fn">toCamelCase</span>(<span class="str">'hello-world'</span>);      <span class="cmt">// "helloWorld"</span>
+
+arrays.<span class="fn">chunk</span>([<span class="num">1</span>,<span class="num">2</span>,<span class="num">3</span>,<span class="num">4</span>,<span class="num">5</span>], <span class="num">2</span>);            <span class="cmt">// [[1,2],[3,4],[5]]</span>
+arrays.<span class="fn">groupBy</span>(users, u => u.role);      <span class="cmt">// { admin: [...], user: [...] }</span>
+
+objects.<span class="fn">pick</span>({ a:<span class="num">1</span>, b:<span class="num">2</span>, c:<span class="num">3</span> }, [<span class="str">'a'</span>,<span class="str">'c'</span>]);  <span class="cmt">// { a:1, c:3 }</span>
+objects.<span class="fn">deepMerge</span>(defaults, overrides);   <span class="cmt">// deep merged object</span>
+
+dates.<span class="fn">timeAgo</span>(<span class="kw">new</span> <span class="type">Date</span>(<span class="str">'2024-01-01'</span>));    <span class="cmt">// "X months ago"</span>
+dates.<span class="fn">formatDate</span>(now, <span class="str">'YYYY-MM-DD'</span>);     <span class="cmt">// "2026-03-05"</span></pre>
+        </div>
+        <div id="tab-cjs" class="tab-content">
+<pre><span class="kw">const</span> { <span class="fn">strings</span>, <span class="fn">arrays</span> } = <span class="fn">require</span>(<span class="str">'@cl3m/corekit'</span>);
+
+strings.<span class="fn">capitalize</span>(<span class="str">'hello'</span>);  <span class="cmt">// "Hello"</span>
+arrays.<span class="fn">unique</span>([<span class="num">1</span>,<span class="num">2</span>,<span class="num">2</span>,<span class="num">3</span>]);      <span class="cmt">// [1, 2, 3]</span></pre>
+        </div>
+        <div id="tab-subpath" class="tab-content">
+<pre><span class="cmt">// Import only what you need — better tree-shaking</span>
+<span class="kw">import</span> { <span class="fn">slugify</span>, <span class="fn">truncate</span> } <span class="kw">from</span> <span class="str">'@cl3m/corekit/strings'</span>;
+<span class="kw">import</span> { <span class="fn">chunk</span>, <span class="fn">groupBy</span> }   <span class="kw">from</span> <span class="str">'@cl3m/corekit/arrays'</span>;
+<span class="kw">import</span> { <span class="fn">pick</span>, <span class="fn">omit</span> }       <span class="kw">from</span> <span class="str">'@cl3m/corekit/objects'</span>;
+<span class="kw">import</span> { <span class="fn">formatDate</span> }        <span class="kw">from</span> <span class="str">'@cl3m/corekit/dates'</span>;</pre>
+        </div>
+      </div>
+
+      <!-- Browser Support -->
+      <div class="section" id="browser">
+        <div class="section-header">
+          <div class="section-icon" style="background:rgba(203,166,247,0.1)">🌐</div>
+          <h2 class="section-title">Browser Support</h2>
+        </div>
+        <p class="section-desc">All core modules are browser-compatible. The CLI is Node.js only.</p>
+
+        <div class="usage-grid">
+          <div class="usage-card">
+            <div class="usage-card-title">📦 CDN (script tag)</div>
+            <pre><span class="kw">&lt;script</span> <span class="type">src</span>=<span class="str">"https://cdn.jsdelivr.net/npm/
+  @cl3m/corekit/dist/browser.global.js"</span><span class="kw">&gt;&lt;/script&gt;</span>
+<span class="kw">&lt;script&gt;</span>
+  corekit.strings.<span class="fn">slugify</span>(<span class="str">'Hello!'</span>);
+  corekit.arrays.<span class="fn">range</span>(<span class="num">1</span>, <span class="num">5</span>);
+<span class="kw">&lt;/script&gt;</span></pre>
+          </div>
+          <div class="usage-card">
+            <div class="usage-card-title">⚡ ESM (modern browser)</div>
+            <pre><span class="kw">&lt;script</span> <span class="type">type</span>=<span class="str">"module"</span><span class="kw">&gt;</span>
+<span class="kw">import</span> { <span class="fn">strings</span> } <span class="kw">from</span>
+  <span class="str">'cdn.jsdelivr.net/.../browser.esm.js'</span>;
+
+strings.<span class="fn">toCamelCase</span>(<span class="str">'hello-world'</span>);
+<span class="kw">&lt;/script&gt;</span></pre>
+          </div>
+          <div class="usage-card">
+            <div class="usage-card-title">🔧 Bundler (Vite / Webpack)</div>
+            <pre><span class="kw">import</span> { <span class="fn">strings</span>, <span class="fn">dates</span> }
+  <span class="kw">from</span> <span class="str">'@cl3m/corekit/browser'</span>;</pre>
+          </div>
+          <div class="usage-card">
+            <div class="usage-card-title">✅ Compatibility</div>
+            <pre><span class="cmt">// Targets ES2017+
+// Chrome 67+, Firefox 60+
+// Safari 11+, Edge 18+
+// Node.js 18+</span></pre>
+          </div>
+        </div>
+      </div>
+
+      <!-- CLI -->
+      <div class="section" id="cli">
+        <div class="section-header">
+          <div class="section-icon" style="background:rgba(249,226,175,0.1)">⌨️</div>
+          <h2 class="section-title">CLI</h2>
+        </div>
+        <p class="section-desc">Run utilities directly from your terminal. Install globally or use with npx.</p>
+        <div style="margin-bottom:16px">
+<pre><span class="cmt"># Install globally</span>
+<span class="fn">npm</span> install -g @cl3m/corekit
+
+<span class="cmt"># Or run without installing</span>
+<span class="fn">npx</span> @cl3m/corekit --help</pre>
+        </div>
+        <div class="cli-grid">
+          <div class="cli-cmd">
+            <span class="prompt">$ </span><span class="cmd-name">corekit</span> <span class="cmd-sub">slugify</span> <span class="cmd-arg">"Hello World!"</span>
+            <span class="cmd-out">hello-world</span>
+          </div>
+          <div class="cli-cmd">
+            <span class="prompt">$ </span><span class="cmd-name">corekit</span> <span class="cmd-sub">camel</span> <span class="cmd-arg">"hello-world"</span>
+            <span class="cmd-out">helloWorld</span>
+          </div>
+          <div class="cli-cmd">
+            <span class="prompt">$ </span><span class="cmd-name">corekit</span> <span class="cmd-sub">chunk</span> <span class="cmd-arg">3 a b c d e f</span>
+            <span class="cmd-out">[["a","b","c"],["d","e","f"]]</span>
+          </div>
+          <div class="cli-cmd">
+            <span class="prompt">$ </span><span class="cmd-name">corekit</span> <span class="cmd-sub">range</span> <span class="cmd-arg">1 10</span>
+            <span class="cmd-out">[1,2,3,4,5,6,7,8,9,10]</span>
+          </div>
+          <div class="cli-cmd">
+            <span class="prompt">$ </span><span class="cmd-name">corekit</span> <span class="cmd-sub">format</span> <span class="cmd-arg">2024-03-15 YYYY/MM/DD</span>
+            <span class="cmd-out">2024/03/15</span>
+          </div>
+          <div class="cli-cmd">
+            <span class="prompt">$ </span><span class="cmd-name">corekit</span> <span class="cmd-sub">timeago</span> <span class="cmd-arg">2024-01-01</span>
+            <span class="cmd-out">14 months ago</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- STRINGS -->
+      <div class="section" id="strings">
+        <div class="section-header">
+          <div class="section-icon" style="background:rgba(166,227,161,0.1); color:var(--green); font-family:'DM Mono',monospace; font-size:12px; font-weight:500">str</div>
+          <h2 class="section-title">strings</h2>
+        </div>
+        <p class="section-desc">Import: <code style="font-family:'DM Mono',monospace;color:var(--accent);font-size:13px">import { strings } from '@cl3m/corekit'</code> &nbsp;or&nbsp; <code style="font-family:'DM Mono',monospace;color:var(--accent);font-size:13px">import { ... } from '@cl3m/corekit/strings'</code></p>
+
+        <!-- capitalize -->
+        <div class="fn-card" id="fn-capitalize">
+          <div class="fn-header" onclick="toggleFn(this)">
+            <div class="fn-sig">
+              <span class="fn-name">capitalize</span><span class="fn-params">(str: <span style="color:var(--type)">string</span>)</span><span class="fn-return"> → string</span>
+              <div class="fn-desc">Capitalize the first letter of a string.</div>
+            </div>
+            <span class="fn-chevron">▶</span>
+          </div>
+          <div class="fn-body">
+            <div class="fn-example-label">Example</div>
+<pre><span class="fn">capitalize</span>(<span class="str">"hello world"</span>)  <span class="cmt">// → "Hello world"</span>
+<span class="fn">capitalize</span>(<span class="str">""</span>)             <span class="cmt">// → ""</span></pre>
+          </div>
+        </div>
+
+        <!-- toCamelCase -->
+        <div class="fn-card" id="fn-toCamelCase">
+          <div class="fn-header" onclick="toggleFn(this)">
+            <div class="fn-sig">
+              <span class="fn-name">toCamelCase</span><span class="fn-params">(str: <span style="color:var(--type)">string</span>)</span><span class="fn-return"> → string</span>
+              <div class="fn-desc">Convert a string to camelCase. Handles hyphens, underscores, and spaces.</div>
+            </div>
+            <span class="fn-chevron">▶</span>
+          </div>
+          <div class="fn-body">
+<pre><span class="fn">toCamelCase</span>(<span class="str">"hello-world"</span>)    <span class="cmt">// → "helloWorld"</span>
+<span class="fn">toCamelCase</span>(<span class="str">"foo_bar_baz"</span>)    <span class="cmt">// → "fooBarBaz"</span>
+<span class="fn">toCamelCase</span>(<span class="str">"hello world"</span>)    <span class="cmt">// → "helloWorld"</span></pre>
+          </div>
+        </div>
+
+        <!-- toKebabCase -->
+        <div class="fn-card" id="fn-toKebabCase">
+          <div class="fn-header" onclick="toggleFn(this)">
+            <div class="fn-sig">
+              <span class="fn-name">toKebabCase</span><span class="fn-params">(str: <span style="color:var(--type)">string</span>)</span><span class="fn-return"> → string</span>
+              <div class="fn-desc">Convert a string to kebab-case.</div>
+            </div>
+            <span class="fn-chevron">▶</span>
+          </div>
+          <div class="fn-body">
+<pre><span class="fn">toKebabCase</span>(<span class="str">"helloWorld"</span>)   <span class="cmt">// → "hello-world"</span>
+<span class="fn">toKebabCase</span>(<span class="str">"foo_bar"</span>)      <span class="cmt">// → "foo-bar"</span></pre>
+          </div>
+        </div>
+
+        <!-- toSnakeCase -->
+        <div class="fn-card" id="fn-toSnakeCase">
+          <div class="fn-header" onclick="toggleFn(this)">
+            <div class="fn-sig">
+              <span class="fn-name">toSnakeCase</span><span class="fn-params">(str: <span style="color:var(--type)">string</span>)</span><span class="fn-return"> → string</span>
+              <div class="fn-desc">Convert a string to snake_case.</div>
+            </div>
+            <span class="fn-chevron">▶</span>
+          </div>
+          <div class="fn-body">
+<pre><span class="fn">toSnakeCase</span>(<span class="str">"helloWorld"</span>)   <span class="cmt">// → "hello_world"</span>
+<span class="fn">toSnakeCase</span>(<span class="str">"hello-world"</span>)  <span class="cmt">// → "hello_world"</span></pre>
+          </div>
+        </div>
+
+        <!-- truncate -->
+        <div class="fn-card" id="fn-truncate">
+          <div class="fn-header" onclick="toggleFn(this)">
+            <div class="fn-sig">
+              <span class="fn-name">truncate</span><span class="fn-params">(str: <span style="color:var(--type)">string</span>, maxLength: <span style="color:var(--type)">number</span>, ellipsis?: <span style="color:var(--type)">string</span>)</span><span class="fn-return"> → string</span>
+              <div class="fn-desc">Truncate a string to a max length, appending an ellipsis if needed. Default ellipsis is <code style="font-family:'DM Mono',monospace">"..."</code>.</div>
+            </div>
+            <span class="fn-chevron">▶</span>
+          </div>
+          <div class="fn-body">
+<pre><span class="fn">truncate</span>(<span class="str">"Hello, world!"</span>, <span class="num">8</span>)           <span class="cmt">// → "Hello..."</span>
+<span class="fn">truncate</span>(<span class="str">"Hi"</span>, <span class="num">8</span>)                    <span class="cmt">// → "Hi"</span>
+<span class="fn">truncate</span>(<span class="str">"Long text here"</span>, <span class="num">7</span>, <span class="str">"…"</span>)    <span class="cmt">// → "Long t…"</span></pre>
+          </div>
+        </div>
+
+        <!-- slugify -->
+        <div class="fn-card" id="fn-slugify">
+          <div class="fn-header" onclick="toggleFn(this)">
+            <div class="fn-sig">
+              <span class="fn-name">slugify</span><span class="fn-params">(str: <span style="color:var(--type)">string</span>)</span><span class="fn-return"> → string</span>
+              <div class="fn-desc">Convert a string to a URL-safe slug. Normalizes unicode, removes special chars.</div>
+            </div>
+            <span class="fn-chevron">▶</span>
+          </div>
+          <div class="fn-body">
+<pre><span class="fn">slugify</span>(<span class="str">"Hello World!"</span>)     <span class="cmt">// → "hello-world"</span>
+<span class="fn">slugify</span>(<span class="str">"Héllo Wörld"</span>)     <span class="cmt">// → "hello-world"</span>
+<span class="fn">slugify</span>(<span class="str">"  Foo  Bar  "</span>)    <span class="cmt">// → "foo-bar"</span></pre>
+          </div>
+        </div>
+
+        <!-- countOccurrences -->
+        <div class="fn-card" id="fn-countOccurrences">
+          <div class="fn-header" onclick="toggleFn(this)">
+            <div class="fn-sig">
+              <span class="fn-name">countOccurrences</span><span class="fn-params">(str: <span style="color:var(--type)">string</span>, sub: <span style="color:var(--type)">string</span>)</span><span class="fn-return"> → number</span>
+              <div class="fn-desc">Count non-overlapping occurrences of a substring.</div>
+            </div>
+            <span class="fn-chevron">▶</span>
+          </div>
+          <div class="fn-body">
+<pre><span class="fn">countOccurrences</span>(<span class="str">"banana"</span>, <span class="str">"an"</span>)    <span class="cmt">// → 2</span>
+<span class="fn">countOccurrences</span>(<span class="str">"hello"</span>, <span class="str">""</span>)      <span class="cmt">// → 0</span></pre>
+          </div>
+        </div>
+
+        <!-- isEmail -->
+        <div class="fn-card" id="fn-isEmail">
+          <div class="fn-header" onclick="toggleFn(this)">
+            <div class="fn-sig">
+              <span class="fn-name">isEmail</span><span class="fn-params">(str: <span style="color:var(--type)">string</span>)</span><span class="fn-return"> → boolean</span>
+              <div class="fn-desc">Check if a string is a valid email address format.</div>
+            </div>
+            <span class="fn-chevron">▶</span>
+          </div>
+          <div class="fn-body">
+<pre><span class="fn">isEmail</span>(<span class="str">"user@example.com"</span>)   <span class="cmt">// → true</span>
+<span class="fn">isEmail</span>(<span class="str">"not-an-email"</span>)       <span class="cmt">// → false</span></pre>
+          </div>
+        </div>
+
+        <!-- reverseString -->
+        <div class="fn-card" id="fn-reverseString">
+          <div class="fn-header" onclick="toggleFn(this)">
+            <div class="fn-sig">
+              <span class="fn-name">reverseString</span><span class="fn-params">(str: <span style="color:var(--type)">string</span>)</span><span class="fn-return"> → string</span>
+              <div class="fn-desc">Reverse a string. Unicode-safe (handles emoji and multi-byte chars).</div>
+            </div>
+            <span class="fn-chevron">▶</span>
+          </div>
+          <div class="fn-body">
+<pre><span class="fn">reverseString</span>(<span class="str">"hello"</span>)    <span class="cmt">// → "olleh"</span>
+<span class="fn">reverseString</span>(<span class="str">"racecar"</span>)  <span class="cmt">// → "racecar"</span></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- ARRAYS -->
+      <div class="section" id="arrays">
+        <div class="section-header">
+          <div class="section-icon" style="background:rgba(137,180,250,0.1); color:var(--accent); font-family:'DM Mono',monospace; font-size:12px; font-weight:500">arr</div>
+          <h2 class="section-title">arrays</h2>
+        </div>
+        <p class="section-desc">Import: <code style="font-family:'DM Mono',monospace;color:var(--accent);font-size:13px">import { arrays } from '@cl3m/corekit'</code> &nbsp;or&nbsp; <code style="font-family:'DM Mono',monospace;color:var(--accent);font-size:13px">import { ... } from '@cl3m/corekit/arrays'</code></p>
+
+        <div class="fn-card" id="fn-unique">
+          <div class="fn-header" onclick="toggleFn(this)">
+            <div class="fn-sig">
+              <span class="fn-name">unique</span><span class="fn-params">&lt;T&gt;(arr: <span style="color:var(--type)">T[]</span>)</span><span class="fn-return"> → T[]</span>
+              <div class="fn-desc">Remove duplicate values from an array. Uses <code style="font-family:'DM Mono',monospace">Set</code> internally.</div>
+            </div>
+            <span class="fn-chevron">▶</span>
+          </div>
+          <div class="fn-body">
+<pre><span class="fn">unique</span>([<span class="num">1</span>, <span class="num">2</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">3</span>])              <span class="cmt">// → [1, 2, 3]</span>
+<span class="fn">unique</span>([<span class="str">'a'</span>, <span class="str">'b'</span>, <span class="str">'a'</span>, <span class="str">'c'</span>])         <span class="cmt">// → ["a", "b", "c"]</span></pre>
+          </div>
+        </div>
+
+        <div class="fn-card" id="fn-chunk">
+          <div class="fn-header" onclick="toggleFn(this)">
+            <div class="fn-sig">
+              <span class="fn-name">chunk</span><span class="fn-params">&lt;T&gt;(arr: <span style="color:var(--type)">T[]</span>, size: <span style="color:var(--type)">number</span>)</span><span class="fn-return"> → T[][]</span>
+              <div class="fn-desc">Split an array into chunks of a given size. Last chunk may be smaller.</div>
+            </div>
+            <span class="fn-chevron">▶</span>
+          </div>
+          <div class="fn-body">
+<pre><span class="fn">chunk</span>([<span class="num">1</span>,<span class="num">2</span>,<span class="num">3</span>,<span class="num">4</span>,<span class="num">5</span>], <span class="num">2</span>)    <span class="cmt">// → [[1,2],[3,4],[5]]</span>
+<span class="fn">chunk</span>([<span class="num">1</span>,<span class="num">2</span>,<span class="num">3</span>], <span class="num">3</span>)         <span class="cmt">// → [[1,2,3]]</span></pre>
+          </div>
+        </div>
+
+        <div class="fn-card" id="fn-flatten">
+          <div class="fn-header" onclick="toggleFn(this)">
+            <div class="fn-sig">
+              <span class="fn-name">flatten</span><span class="fn-params">&lt;T&gt;(arr: <span style="color:var(--type)">(T | T[])[]</span>, deep?: <span style="color:var(--type)">boolean</span>)</span><span class="fn-return"> → T[]</span>
+              <div class="fn-desc">Flatten a nested array by one level, or deeply if <code style="font-family:'DM Mono',monospace">deep=true</code>.</div>
+            </div>
+            <span class="fn-chevron">▶</span>
+          </div>
+          <div class="fn-body">
+<pre><span class="fn">flatten</span>([[<span class="num">1</span>,<span class="num">2</span>],[<span class="num">3</span>,[<span class="num">4</span>]]])        <span class="cmt">// → [1, 2, 3, [4]]</span>
+<span class="fn">flatten</span>([[<span class="num">1</span>,<span class="num">2</span>],[<span class="num">3</span>,[<span class="num">4</span>]]], <span class="kw">true</span>) <span class="cmt">// → [1, 2, 3, 4]</span></pre>
+          </div>
+        </div>
+
+        <div class="fn-card" id="fn-intersection">
+          <div class="fn-header" onclick="toggleFn(this)">
+            <div class="fn-sig">
+              <span class="fn-name">intersection</span><span class="fn-params">&lt;T&gt;(a: <span style="color:var(--type)">T[]</span>, b: <span style="color:var(--type)">T[]</span>)</span><span class="fn-return"> → T[]</span>
+              <div class="fn-desc">Return elements present in both arrays.</div>
+            </div>
+            <span class="fn-chevron">▶</span>
+          </div>
+          <div class="fn-body">
+<pre><span class="fn">intersection</span>([<span class="num">1</span>,<span class="num">2</span>,<span class="num">3</span>], [<span class="num">2</span>,<span class="num">3</span>,<span class="num">4</span>])    <span class="cmt">// → [2, 3]</span></pre>
+          </div>
+        </div>
+
+        <div class="fn-card" id="fn-difference">
+          <div class="fn-header" onclick="toggleFn(this)">
+            <div class="fn-sig">
+              <span class="fn-name">difference</span><span class="fn-params">&lt;T&gt;(a: <span style="color:var(--type)">T[]</span>, b: <span style="color:var(--type)">T[]</span>)</span><span class="fn-return"> → T[]</span>
+              <div class="fn-desc">Return elements in <code style="font-family:'DM Mono',monospace">a</code> that are not in <code style="font-family:'DM Mono',monospace">b</code>.</div>
+            </div>
+            <span class="fn-chevron">▶</span>
+          </div>
+          <div class="fn-body">
+<pre><span class="fn">difference</span>([<span class="num">1</span>,<span class="num">2</span>,<span class="num">3</span>], [<span class="num">2</span>,<span class="num">3</span>,<span class="num">4</span>])    <span class="cmt">// → [1]</span></pre>
+          </div>
+        </div>
+
+        <div class="fn-card" id="fn-groupBy">
+          <div class="fn-header" onclick="toggleFn(this)">
+            <div class="fn-sig">
+              <span class="fn-name">groupBy</span><span class="fn-params">&lt;T&gt;(arr: <span style="color:var(--type)">T[]</span>, keyFn: <span style="color:var(--type)">(item: T) => string</span>)</span><span class="fn-return"> → Record&lt;string, T[]&gt;</span>
+              <div class="fn-desc">Group array elements into an object by a key derived from a callback function.</div>
+            </div>
+            <span class="fn-chevron">▶</span>
+          </div>
+          <div class="fn-body">
+<pre><span class="kw">const</span> users = [
+  { name: <span class="str">'Alice'</span>, role: <span class="str">'admin'</span> },
+  { name: <span class="str">'Bob'</span>,   role: <span class="str">'user'</span> },
+  { name: <span class="str">'Carol'</span>, role: <span class="str">'admin'</span> },
+];
+
+<span class="fn">groupBy</span>(users, u => u.role);
+<span class="cmt">// → { admin: [Alice, Carol], user: [Bob] }</span></pre>
+          </div>
+        </div>
+
+        <div class="fn-card" id="fn-shuffle">
+          <div class="fn-header" onclick="toggleFn(this)">
+            <div class="fn-sig">
+              <span class="fn-name">shuffle</span><span class="fn-params">&lt;T&gt;(arr: <span style="color:var(--type)">T[]</span>)</span><span class="fn-return"> → T[]</span>
+              <div class="fn-desc">Shuffle an array using Fisher-Yates. Returns a new array, does not mutate.</div>
+            </div>
+            <span class="fn-chevron">▶</span>
+          </div>
+          <div class="fn-body">
+<pre><span class="fn">shuffle</span>([<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>, <span class="num">5</span>])   <span class="cmt">// → [3, 1, 5, 2, 4] (random)</span></pre>
+          </div>
+        </div>
+
+        <div class="fn-card" id="fn-sum">
+          <div class="fn-header" onclick="toggleFn(this)">
+            <div class="fn-sig">
+              <span class="fn-name">sum</span><span class="fn-params">(arr: <span style="color:var(--type)">number[]</span>)</span><span class="fn-return"> → number</span>
+              <div class="fn-desc">Sum all numbers in an array.</div>
+            </div>
+            <span class="fn-chevron">▶</span>
+          </div>
+          <div class="fn-body">
+<pre><span class="fn">sum</span>([<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>, <span class="num">4</span>])   <span class="cmt">// → 10</span>
+<span class="fn">sum</span>([])             <span class="cmt">// → 0</span></pre>
+          </div>
+        </div>
+
+        <div class="fn-card" id="fn-minMax">
+          <div class="fn-header" onclick="toggleFn(this)">
+            <div class="fn-sig">
+              <span class="fn-name">minMax</span><span class="fn-params">(arr: <span style="color:var(--type)">number[]</span>)</span><span class="fn-return"> → {'{ min: number; max: number }'}</span>
+              <div class="fn-desc">Get the minimum and maximum values of a numeric array in one pass.</div>
+            </div>
+            <span class="fn-chevron">▶</span>
+          </div>
+          <div class="fn-body">
+<pre><span class="fn">minMax</span>([<span class="num">3</span>, <span class="num">1</span>, <span class="num">4</span>, <span class="num">1</span>, <span class="num">5</span>, <span class="num">9</span>])   <span class="cmt">// → { min: 1, max: 9 }</span></pre>
+          </div>
+        </div>
+
+        <div class="fn-card" id="fn-range">
+          <div class="fn-header" onclick="toggleFn(this)">
+            <div class="fn-sig">
+              <span class="fn-name">range</span><span class="fn-params">(start: <span style="color:var(--type)">number</span>, end: <span style="color:var(--type)">number</span>, step?: <span style="color:var(--type)">number</span>)</span><span class="fn-return"> → number[]</span>
+              <div class="fn-desc">Generate an array of numbers from start to end (inclusive), with optional step.</div>
+            </div>
+            <span class="fn-chevron">▶</span>
+          </div>
+          <div class="fn-body">
+<pre><span class="fn">range</span>(<span class="num">1</span>, <span class="num">5</span>)        <span class="cmt">// → [1, 2, 3, 4, 5]</span>
+<span class="fn">range</span>(<span class="num">0</span>, <span class="num">10</span>, <span class="num">2</span>)   <span class="cmt">// → [0, 2, 4, 6, 8, 10]</span></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- OBJECTS -->
+      <div class="section" id="objects">
+        <div class="section-header">
+          <div class="section-icon" style="background:rgba(203,166,247,0.1); color:var(--purple); font-family:'DM Mono',monospace; font-size:12px; font-weight:500">obj</div>
+          <h2 class="section-title">objects</h2>
+        </div>
+        <p class="section-desc">Import: <code style="font-family:'DM Mono',monospace;color:var(--accent);font-size:13px">import { objects } from '@cl3m/corekit'</code> &nbsp;or&nbsp; <code style="font-family:'DM Mono',monospace;color:var(--accent);font-size:13px">import { ... } from '@cl3m/corekit/objects'</code></p>
+
+        <div class="fn-card" id="fn-deepClone">
+          <div class="fn-header" onclick="toggleFn(this)">
+            <div class="fn-sig">
+              <span class="fn-name">deepClone</span><span class="fn-params">&lt;T&gt;(obj: <span style="color:var(--type)">T</span>)</span><span class="fn-return"> → T</span>
+              <div class="fn-desc">Deep clone a plain object or array via JSON serialization. Does not handle functions, Dates, or circular refs.</div>
+            </div>
+            <span class="fn-chevron">▶</span>
+          </div>
+          <div class="fn-body">
+<pre><span class="kw">const</span> original = { a: { b: <span class="num">1</span> } };
+<span class="kw">const</span> clone = <span class="fn">deepClone</span>(original);
+clone.a.b = <span class="num">99</span>;
+original.a.b;  <span class="cmt">// → 1 (unchanged)</span></pre>
+          </div>
+        </div>
+
+        <div class="fn-card" id="fn-deepMerge">
+          <div class="fn-header" onclick="toggleFn(this)">
+            <div class="fn-sig">
+              <span class="fn-name">deepMerge</span><span class="fn-params">&lt;T&gt;(target: <span style="color:var(--type)">T</span>, source: <span style="color:var(--type)">Partial&lt;T&gt;</span>)</span><span class="fn-return"> → T</span>
+              <div class="fn-desc">Recursively merge two objects. Nested objects are merged; arrays are replaced.</div>
+            </div>
+            <span class="fn-chevron">▶</span>
+          </div>
+          <div class="fn-body">
+<pre><span class="fn">deepMerge</span>(
+  { x: <span class="num">1</span>, y: { z: <span class="num">2</span>, w: <span class="num">3</span> } },
+  { y: { z: <span class="num">99</span> } }
+)
+<span class="cmt">// → { x: 1, y: { z: 99, w: 3 } }</span></pre>
+          </div>
+        </div>
+
+        <div class="fn-card" id="fn-pick">
+          <div class="fn-header" onclick="toggleFn(this)">
+            <div class="fn-sig">
+              <span class="fn-name">pick</span><span class="fn-params">&lt;T, K&gt;(obj: <span style="color:var(--type)">T</span>, keys: <span style="color:var(--type)">K[]</span>)</span><span class="fn-return"> → Pick&lt;T, K&gt;</span>
+              <div class="fn-desc">Create a new object with only the specified keys. Fully type-safe.</div>
+            </div>
+            <span class="fn-chevron">▶</span>
+          </div>
+          <div class="fn-body">
+<pre><span class="fn">pick</span>({ a:<span class="num">1</span>, b:<span class="num">2</span>, c:<span class="num">3</span> }, [<span class="str">'a'</span>, <span class="str">'c'</span>])   <span class="cmt">// → { a:1, c:3 }</span></pre>
+          </div>
+        </div>
+
+        <div class="fn-card" id="fn-omit">
+          <div class="fn-header" onclick="toggleFn(this)">
+            <div class="fn-sig">
+              <span class="fn-name">omit</span><span class="fn-params">&lt;T, K&gt;(obj: <span style="color:var(--type)">T</span>, keys: <span style="color:var(--type)">K[]</span>)</span><span class="fn-return"> → Omit&lt;T, K&gt;</span>
+              <div class="fn-desc">Create a new object excluding the specified keys. Complement of <code style="font-family:'DM Mono',monospace">pick</code>.</div>
+            </div>
+            <span class="fn-chevron">▶</span>
+          </div>
+          <div class="fn-body">
+<pre><span class="fn">omit</span>({ a:<span class="num">1</span>, b:<span class="num">2</span>, c:<span class="num">3</span> }, [<span class="str">'b'</span>])   <span class="cmt">// → { a:1, c:3 }</span></pre>
+          </div>
+        </div>
+
+        <div class="fn-card" id="fn-flattenObject">
+          <div class="fn-header" onclick="toggleFn(this)">
+            <div class="fn-sig">
+              <span class="fn-name">flattenObject</span><span class="fn-params">(obj: <span style="color:var(--type)">Record&lt;string, unknown&gt;</span>, prefix?: <span style="color:var(--type)">string</span>)</span><span class="fn-return"> → Record&lt;string, unknown&gt;</span>
+              <div class="fn-desc">Flatten a deeply nested object using dot-notation keys.</div>
+            </div>
+            <span class="fn-chevron">▶</span>
+          </div>
+          <div class="fn-body">
+<pre><span class="fn">flattenObject</span>({ a: { b: { c: <span class="num">1</span> }, d: <span class="num">2</span> } })
+<span class="cmt">// → { 'a.b.c': 1, 'a.d': 2 }</span></pre>
+          </div>
+        </div>
+
+        <div class="fn-card" id="fn-invertObject">
+          <div class="fn-header" onclick="toggleFn(this)">
+            <div class="fn-sig">
+              <span class="fn-name">invertObject</span><span class="fn-params">(obj: <span style="color:var(--type)">Record&lt;string, string&gt;</span>)</span><span class="fn-return"> → Record&lt;string, string&gt;</span>
+              <div class="fn-desc">Swap all keys and values of an object.</div>
+            </div>
+            <span class="fn-chevron">▶</span>
+          </div>
+          <div class="fn-body">
+<pre><span class="fn">invertObject</span>({ a: <span class="str">'1'</span>, b: <span class="str">'2'</span> })   <span class="cmt">// → { '1': 'a', '2': 'b' }</span></pre>
+          </div>
+        </div>
+
+        <div class="fn-card" id="fn-getByPath">
+          <div class="fn-header" onclick="toggleFn(this)">
+            <div class="fn-sig">
+              <span class="fn-name">getByPath</span><span class="fn-params">(obj: <span style="color:var(--type)">Record&lt;string, unknown&gt;</span>, path: <span style="color:var(--type)">string</span>)</span><span class="fn-return"> → unknown</span>
+              <div class="fn-desc">Safely get a nested value using a dot-notation path. Returns <code style="font-family:'DM Mono',monospace">undefined</code> if path doesn't exist.</div>
+            </div>
+            <span class="fn-chevron">▶</span>
+          </div>
+          <div class="fn-body">
+<pre><span class="fn">getByPath</span>({ a: { b: <span class="num">42</span> } }, <span class="str">'a.b'</span>)     <span class="cmt">// → 42</span>
+<span class="fn">getByPath</span>({ a: {} }, <span class="str">'a.b.c'</span>)         <span class="cmt">// → undefined</span></pre>
+          </div>
+        </div>
+
+        <div class="fn-card" id="fn-isEmpty">
+          <div class="fn-header" onclick="toggleFn(this)">
+            <div class="fn-sig">
+              <span class="fn-name">isEmpty</span><span class="fn-params">(obj: <span style="color:var(--type)">Record&lt;string, unknown&gt;</span>)</span><span class="fn-return"> → boolean</span>
+              <div class="fn-desc">Check if an object has no own enumerable keys.</div>
+            </div>
+            <span class="fn-chevron">▶</span>
+          </div>
+          <div class="fn-body">
+<pre><span class="fn">isEmpty</span>({})          <span class="cmt">// → true</span>
+<span class="fn">isEmpty</span>({ a: <span class="num">1</span> })   <span class="cmt">// → false</span></pre>
+          </div>
+        </div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- DATES -->
+      <div class="section" id="dates">
+        <div class="section-header">
+          <div class="section-icon" style="background:rgba(249,226,175,0.1); color:var(--yellow); font-family:'DM Mono',monospace; font-size:12px; font-weight:500">dt</div>
+          <h2 class="section-title">dates</h2>
+        </div>
+        <p class="section-desc">Import: <code style="font-family:'DM Mono',monospace;color:var(--accent);font-size:13px">import { dates } from '@cl3m/corekit'</code> &nbsp;or&nbsp; <code style="font-family:'DM Mono',monospace;color:var(--accent);font-size:13px">import { ... } from '@cl3m/corekit/dates'</code></p>
+
+        <div class="fn-card" id="fn-formatDate">
+          <div class="fn-header" onclick="toggleFn(this)">
+            <div class="fn-sig">
+              <span class="fn-name">formatDate</span><span class="fn-params">(date: <span style="color:var(--type)">Date</span>, template: <span style="color:var(--type)">string</span>)</span><span class="fn-return"> → string</span>
+              <div class="fn-desc">Format a date using a template. Tokens: <code style="font-family:'DM Mono',monospace">YYYY MM DD HH mm ss</code>.</div>
+            </div>
+            <span class="fn-chevron">▶</span>
+          </div>
+          <div class="fn-body">
+<pre><span class="kw">const</span> d = <span class="kw">new</span> <span class="type">Date</span>(<span class="str">'2024-03-15T09:05:00'</span>);
+<span class="fn">formatDate</span>(d, <span class="str">'YYYY-MM-DD'</span>)      <span class="cmt">// → "2024-03-15"</span>
+<span class="fn">formatDate</span>(d, <span class="str">'DD/MM/YYYY'</span>)      <span class="cmt">// → "15/03/2024"</span>
+<span class="fn">formatDate</span>(d, <span class="str">'HH:mm:ss'</span>)        <span class="cmt">// → "09:05:00"</span></pre>
+          </div>
+        </div>
+
+        <div class="fn-card" id="fn-addToDate">
+          <div class="fn-header" onclick="toggleFn(this)">
+            <div class="fn-sig">
+              <span class="fn-name">addToDate</span><span class="fn-params">(date: <span style="color:var(--type)">Date</span>, amount: <span style="color:var(--type)">number</span>, unit: <span style="color:var(--type)">'days' | 'months' | 'years'</span>)</span><span class="fn-return"> → Date</span>
+              <div class="fn-desc">Add a duration to a date. Returns a new Date object without mutating the original.</div>
+            </div>
+            <span class="fn-chevron">▶</span>
+          </div>
+          <div class="fn-body">
+<pre><span class="kw">const</span> d = <span class="kw">new</span> <span class="type">Date</span>(<span class="str">'2024-01-15'</span>);
+<span class="fn">addToDate</span>(d, <span class="num">10</span>, <span class="str">'days'</span>)    <span class="cmt">// → 2024-01-25</span>
+<span class="fn">addToDate</span>(d, <span class="num">2</span>, <span class="str">'months'</span>)  <span class="cmt">// → 2024-03-15</span>
+<span class="fn">addToDate</span>(d, <span class="num">1</span>, <span class="str">'years'</span>)   <span class="cmt">// → 2025-01-15</span></pre>
+          </div>
+        </div>
+
+        <div class="fn-card" id="fn-diffDates">
+          <div class="fn-header" onclick="toggleFn(this)">
+            <div class="fn-sig">
+              <span class="fn-name">diffDates</span><span class="fn-params">(a: <span style="color:var(--type)">Date</span>, b: <span style="color:var(--type)">Date</span>, unit: <span style="color:var(--type)">'milliseconds' | 'seconds' | 'minutes' | 'hours' | 'days'</span>)</span><span class="fn-return"> → number</span>
+              <div class="fn-desc">Get the difference between two dates in the specified unit. Can be negative.</div>
+            </div>
+            <span class="fn-chevron">▶</span>
+          </div>
+          <div class="fn-body">
+<pre><span class="kw">const</span> a = <span class="kw">new</span> <span class="type">Date</span>(<span class="str">'2024-01-01'</span>);
+<span class="kw">const</span> b = <span class="kw">new</span> <span class="type">Date</span>(<span class="str">'2024-01-11'</span>);
+<span class="fn">diffDates</span>(a, b, <span class="str">'days'</span>)    <span class="cmt">// → 10</span>
+<span class="fn">diffDates</span>(a, b, <span class="str">'hours'</span>)   <span class="cmt">// → 240</span></pre>
+          </div>
+        </div>
+
+        <div class="fn-card" id="fn-timeAgo">
+          <div class="fn-header" onclick="toggleFn(this)">
+            <div class="fn-sig">
+              <span class="fn-name">timeAgo</span><span class="fn-params">(date: <span style="color:var(--type)">Date</span>, now?: <span style="color:var(--type)">Date</span>)</span><span class="fn-return"> → string</span>
+              <div class="fn-desc">Return a human-readable relative time string. Handles both past and future dates.</div>
+            </div>
+            <span class="fn-chevron">▶</span>
+          </div>
+          <div class="fn-body">
+<pre><span class="fn">timeAgo</span>(<span class="kw">new</span> <span class="type">Date</span>(Date.now() - <span class="num">30000</span>))    <span class="cmt">// → "just now"</span>
+<span class="fn">timeAgo</span>(<span class="kw">new</span> <span class="type">Date</span>(Date.now() - <span class="num">3600000</span>))   <span class="cmt">// → "1 hour ago"</span>
+<span class="fn">timeAgo</span>(<span class="kw">new</span> <span class="type">Date</span>(<span class="str">'2024-01-01'</span>))          <span class="cmt">// → "14 months ago"</span>
+<span class="fn">timeAgo</span>(<span class="kw">new</span> <span class="type">Date</span>(Date.now() + <span class="num">86400000</span>))  <span class="cmt">// → "in 1 day"</span></pre>
+          </div>
+        </div>
+
+        <div class="fn-card" id="fn-isBetween">
+          <div class="fn-header" onclick="toggleFn(this)">
+            <div class="fn-sig">
+              <span class="fn-name">isBetween</span><span class="fn-params">(date: <span style="color:var(--type)">Date</span>, start: <span style="color:var(--type)">Date</span>, end: <span style="color:var(--type)">Date</span>)</span><span class="fn-return"> → boolean</span>
+              <div class="fn-desc">Check if a date falls within a range, inclusive of both endpoints.</div>
+            </div>
+            <span class="fn-chevron">▶</span>
+          </div>
+          <div class="fn-body">
+<pre><span class="fn">isBetween</span>(
+  <span class="kw">new</span> <span class="type">Date</span>(<span class="str">'2024-06-15'</span>),
+  <span class="kw">new</span> <span class="type">Date</span>(<span class="str">'2024-01-01'</span>),
+  <span class="kw">new</span> <span class="type">Date</span>(<span class="str">'2024-12-31'</span>)
+)  <span class="cmt">// → true</span></pre>
+          </div>
+        </div>
+
+        <div class="fn-card" id="fn-isSameDay">
+          <div class="fn-header" onclick="toggleFn(this)">
+            <div class="fn-sig">
+              <span class="fn-name">isSameDay</span><span class="fn-params">(a: <span style="color:var(--type)">Date</span>, b: <span style="color:var(--type)">Date</span>)</span><span class="fn-return"> → boolean</span>
+              <div class="fn-desc">Check if two dates fall on the same calendar day, regardless of time.</div>
+            </div>
+            <span class="fn-chevron">▶</span>
+          </div>
+          <div class="fn-body">
+<pre><span class="fn">isSameDay</span>(<span class="kw">new</span> <span class="type">Date</span>(<span class="str">'2024-03-15'</span>), <span class="kw">new</span> <span class="type">Date</span>(<span class="str">'2024-03-15'</span>))  <span class="cmt">// → true</span>
+<span class="fn">isSameDay</span>(<span class="kw">new</span> <span class="type">Date</span>(<span class="str">'2024-03-15'</span>), <span class="kw">new</span> <span class="type">Date</span>(<span class="str">'2024-03-16'</span>))  <span class="cmt">// → false</span></pre>
+          </div>
+        </div>
+
+        <div class="fn-card" id="fn-startOf">
+          <div class="fn-header" onclick="toggleFn(this)">
+            <div class="fn-sig">
+              <span class="fn-name">startOf</span><span class="fn-params">(date: <span style="color:var(--type)">Date</span>, unit: <span style="color:var(--type)">'day' | 'month' | 'year'</span>)</span><span class="fn-return"> → Date</span>
+              <div class="fn-desc">Get the start of a day, month, or year for a given date.</div>
+            </div>
+            <span class="fn-chevron">▶</span>
+          </div>
+          <div class="fn-body">
+<pre><span class="kw">const</span> d = <span class="kw">new</span> <span class="type">Date</span>(<span class="str">'2024-03-15T14:30:00'</span>);
+<span class="fn">startOf</span>(d, <span class="str">'day'</span>)    <span class="cmt">// → 2024-03-15 00:00:00</span>
+<span class="fn">startOf</span>(d, <span class="str">'month'</span>)  <span class="cmt">// → 2024-03-01 00:00:00</span>
+<span class="fn">startOf</span>(d, <span class="str">'year'</span>)   <span class="cmt">// → 2024-01-01 00:00:00</span></pre>
+          </div>
+        </div>
+
+        <div class="fn-card" id="fn-isValidDate">
+          <div class="fn-header" onclick="toggleFn(this)">
+            <div class="fn-sig">
+              <span class="fn-name">isValidDate</span><span class="fn-params">(val: <span style="color:var(--type)">unknown</span>)</span><span class="fn-return"> → val is Date</span>
+              <div class="fn-desc">Type guard that checks if a value is a valid, non-NaN Date object.</div>
+            </div>
+            <span class="fn-chevron">▶</span>
+          </div>
+          <div class="fn-body">
+<pre><span class="fn">isValidDate</span>(<span class="kw">new</span> <span class="type">Date</span>())             <span class="cmt">// → true</span>
+<span class="fn">isValidDate</span>(<span class="kw">new</span> <span class="type">Date</span>(<span class="str">'invalid'</span>))    <span class="cmt">// → false</span>
+<span class="fn">isValidDate</span>(<span class="str">'2024-01-01'</span>)          <span class="cmt">// → false</span></pre>
+          </div>
+        </div>
+      </div>
+
+      <div style="height:64px"></div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+      <span>@cl3m/corekit — MIT License</span>
+      <span>
+        <a href="https://github.com/clemdevlin/corekit">GitHub</a>
+        &nbsp;·&nbsp;
+        <a href="https://npmjs.com/package/@cl3m/corekit">npm</a>
+      </span>
+    </footer>
+
+  </main>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@cl3m/corekit/dist/browser.global.js"></script>
+<script type="module">
+  import { strings, arrays, dates } from "https://cdn.jsdelivr.net/npm/@cl3m/corekit/dist/browser.esm.js";
+
+  console.log(strings.slugify("Hello World!"));     // "hello-world"
+  console.log(arrays.chunk([1,2,3,4,5], 2));        // [[1,2],[3,4],[5]]
+  console.log(dates.timeAgo(new Date("2024-01-01"))); // "X months ago"
+</script>
+
+<script>
+  function toggleFn(header) {
+    const card = header.closest('.fn-card');
+    card.classList.toggle('open');
+  }
+
+  function switchTab(el, id) {
+    const bar = el.closest('.tab-bar');
+    bar.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    const container = bar.nextElementSibling;
+    // find all tab-content siblings
+    let sib = bar.nextElementSibling;
+    while (sib && sib.classList.contains('tab-content')) {
+      sib.classList.remove('active');
+      sib = sib.nextElementSibling;
+    }
+    document.getElementById('tab-' + id).classList.add('active');
+  }
+
+  function copyInstall(btn) {
+    const text = document.getElementById('install-cmd').textContent;
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'copied!';
+      btn.classList.add('copied');
+      setTimeout(() => {
+        btn.textContent = 'copy';
+        btn.classList.remove('copied');
+      }, 2000);
+    });
+  }
+
+  // Highlight active nav link on scroll
+  const sections = document.querySelectorAll('[id]');
+  const navLinks = document.querySelectorAll('.nav-link');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector(`.nav-link[href="#${entry.target.id}"]`);
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { rootMargin: '-20% 0px -70% 0px' });
+
+  sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
